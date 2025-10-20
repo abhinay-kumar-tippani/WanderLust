@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form method="post" action="/listings/<%= list._id %>?_method=PATCH">
+        <input name="listing[title]" value="<%=list.title %>">
+        <br>
+        <br>
+        <br>
+        <textarea name="listing[description]" value="<%=list.description %>" rows="15"></textarea>
+        <br>
+        <br>
+        <br>
+        <input name="listing[image]" value="<%=list.image %>">
+        <br>
+        <br>
+        <br>
+        <input name="listing[price]" value="<%=list.price %>">
+        <br>
+        <br>
+        <br>
+        <input name="listing[location]" value="<%=list.location %>">
+        <br>
+        <br>
+        <br>
+        <input name="listing[country]" value="<%=list.country %>">
+        <br>
+        <br>
+        <br>
+
+        <button>Edit</button>
+    </form>
+</body>
+</html>

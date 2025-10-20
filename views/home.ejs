@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WanderLust</title>
+</head>
+<body>
+    <h1><center>Listings</center></h1>
+
+    <br>
+    <% for(list of listings){ %>
+        <div>
+            <a href="http://localhost:3000/listings/<%= list._id %>"><img src="<%= list.image %>"></a>
+            <h2> <%= list.title %> </h2>
+            <h3> <%= list.description %> </h3>
+        </div>
+        <br>
+        <hr>
+        <br>
+        <br>
+    <% } %>
+
+    <br>
+    <a href="http://localhost:3000/listings/create">
+        <button>Create Listing</button>
+    </a>
+    
+</body>
+</html>
+
+
