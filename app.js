@@ -24,7 +24,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
 
 app.get("/create", async(req, res)=>{
-    res.render("create");
+    res.render("listings/create");
 });
 
 // app.get("/", async (req,res)=>{
@@ -34,19 +34,19 @@ app.get("/create", async(req, res)=>{
 
 app.get("/listings", async (req,res)=>{
     let listings = await Listing.find({});
-    res.render("home", {listings});
+    res.render("listings/home", {listings});
 });
 
 app.get("/listings/:id", async (req, res)=>{
     let {id} = req.params;
     let list = await Listing.findById(`${id}`);
-    res.render("list", {list});
+    res.render("listings/list", {list});
 });
 
 app.get("/listings/:id/edit", async (req, res)=>{
     let {id} = req.params;
     let list = await Listing.findById(`${id}`);
-    res.render("edit", {list});
+    res.render("listings/edit", {list});
 });
 
 app.patch("/listings/:id", async (req,res)=>{
@@ -68,6 +68,6 @@ app.delete("/listings/:id", async (req, res)=>{
     let {id} = req.params;
     await Listing.findByIdAndDelete(`${id}`);
     console.log("Deleted successfully!");
-    res.redirect("/");
+    res.redirect("/listings");
 });
 
