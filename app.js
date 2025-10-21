@@ -27,10 +27,10 @@ app.get("/create", async(req, res)=>{
     res.render("listings/create");
 });
 
-// app.get("/", async (req,res)=>{
-//     let listings = await Listing.find({});
-//     res.render("home", {listings});
-// });
+app.get("/", async (req,res)=>{
+    let count = await Listing.countDocuments();
+    res.send(`<h1>We have total of ${count} Listings!</h1><br><br><h2><a href="http://localhost:3000/listings">Click Here</a></h2>`);
+});
 
 app.get("/listings", async (req,res)=>{
     let listings = await Listing.find({});
@@ -53,7 +53,7 @@ app.patch("/listings/:id", async (req,res)=>{
     let {id} = req.params;
     await Listing.findByIdAndUpdate(`${id}`, { ...req.body.listing});
     console.log("Updated successfully!");
-    res.redirect("/listings");
+    res.redirect(`/listings/${id}`);
 });
 
 
