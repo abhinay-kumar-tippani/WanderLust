@@ -6,6 +6,7 @@
     <title>Document</title>
 </head>
 <body>
+    <% layout('layouts/boilerplate') -%>
     <form method="post" action="/listings/<%= list._id %>?_method=PATCH">
         <input name="listing[title]" value="<%=list.title %>">
         <br>

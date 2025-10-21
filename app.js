@@ -5,6 +5,7 @@ const port = 3000;
 const Listing = require("./models/listing.js");
 const path = require("path");
 const methodOverride = require("method-override");
+const ejsMate = require("ejs-mate");
 
 app.listen(port);
 
@@ -22,6 +23,7 @@ app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 app.use(express.urlencoded({extended:true}));
 app.use(methodOverride("_method"));
+app.engine('ejs', ejsMate);
 
 app.get("/create", async(req, res)=>{
     res.render("listings/create");
