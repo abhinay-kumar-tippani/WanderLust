@@ -1,0 +1,17 @@
+.navbar{
+    height: 5rem;
+}
+
+.nav-link{
+    color: black;
+    font-size: x-large;
+    /* font-weight: bolder; */
+}
+
+.navbar-brand{
+    color: #FF385C;
+}
+
+.navbar-brand:hover{
+    color: #FF385C;
+}
