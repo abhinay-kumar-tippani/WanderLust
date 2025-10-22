@@ -1,23 +1,23 @@
-
 <body>
-    <% layout('layouts/boilerplate') -%>
-
-    <br>
-    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 ">  
-    <% for(list of listings){ %>
-        <div class="card" >
-            <a href="listings/<%= list._id %>"><img src="<%= list.image %>" class="card-img-top" style="height: 20rem;"></a>
+  <% layout('layouts/boilerplate') -%>
+  <br>
+  <div class="container">
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 mt-3">
+      <% for(list of listings){ %>
+        <div class="col mb-4">
+          <div class="card">
+            <a href="listings/<%= list._id %>">
+              <img src="<%= list.image %>" class="card-img-top" style="height: 20rem;">
+            </a>
             <div class="card-body">
-                <p class="card-text"><%= list.title %><br><br>
-                    &#8377; <%= list.price.toLocaleString("en-IN") %>/night</p>
+              <p class="card-text">
+                <b><%= list.title %></b><br>
+                &#8377; <%= list.price.toLocaleString("en-IN") %>/night
+              </p>
             </div>
+          </div>
         </div>
-        <% } %>
+      <% } %>
     </div>
-
-    <br>
-    <a href="http://localhost:3000/listings/create">
-        <button>Create Listing</button>
-    </a>
-    
+  </div>
 </body>

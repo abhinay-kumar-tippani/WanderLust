@@ -1,28 +1,63 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+<% layout("/layouts/boilerplate") %>
+<style>
+    .listing-card {
+  /* border-radius: 16px; */
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+.listing-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+
+.show-img {
+  object-fit: cover;
+  border-radius: 16px;
+  height: 420px;
+}
+
+.card-title {
+  font-size: 28px;
+}
+
+.btn {
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.2s ease-in-out;
+}
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+</style>
+
 <body>
-    <% layout('layouts/boilerplate') -%>
-    <div>
-        <h2> <%= list.title %> </h2>
-        <h3> <%= list.description %> </h3>
-        <img src="<%= list.image %>">
-        <h4>&#8377; <%= list.price.toLocaleString("en-IN") %> </h4>
-        <h4><%= list.location %> </h4>
-        <h4> <%= list.country %> </h4>
-        <br>
+  <div class="container py-5">
+    <div class="row justify-content-center">
+      <div class="card col-lg-8 col-md-10 shadow-sm border-0 listing-card">
+        <img src="<%= list.image %>" class="card-img-top show-img" alt="Listing image">
+        <div class="card-body px-4 py-3">
+          <h2 class="card-title mb-3 text-primary fw-semibold"><%= list.title %></h2>
+          <p class="card-text text-muted fs-5"><%= list.description %></p>
+          <p class="card-text fs-5 text-success fw-bold">&#8377; <%= list.price.toLocaleString("en-IN") %></p>
+          <p class="card-text"><i class="bi bi-geo-alt-fill"></i> <%= list.location %>, <%= list.country %></p>
+        </div>
+      </div>
     </div>
-    <h1><a href="http://localhost:3000/listings"><button>Get Back</button></a></h1>
-    <br>
-    <br>
-    <a href="http://localhost:3000/listings/<%= list._id %>/edit"><button>Edit btn</button></a>
-    <br>
-    <form method="post" action="/listings<%= list._id %>/?_method=DELETE">
-        <button>Delete btn</button>
-    </form>
+
+    <div class="row mt-4 justify-content-center">
+      <div class="col-lg-8 col-md-10 d-flex flex-wrap justify-content-between gap-3">
+        <a href="/listings" class="btn btn-outline-secondary px-4 py-2">
+          <i class="bi bi-arrow-left-circle"></i> Back
+        </a>
+        <a href="/listings/<%= list._id %>/edit" class="btn btn-warning px-4 py-2">
+          <i class="bi bi-pencil-square"></i> Edit
+        </a>
+        <form method="POST" action="/listings/<%= list._id %>?_method=DELETE">
+          <button type="submit" class="btn btn-danger px-4 py-2">
+            <i class="bi bi-trash"></i> Delete
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
 </body>
-</html>
