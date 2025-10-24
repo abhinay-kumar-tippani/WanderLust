@@ -34,7 +34,6 @@ const validateSchema = (req,res)=>{
     const { error } = ListingSchema.validate(req.body.listing);
     if (error) {
         const message = error.details.map(el => el.message).join(',');
-        console.log(error);
         throw new ExpressError(400, message);
     }
 }
