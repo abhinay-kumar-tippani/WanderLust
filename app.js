@@ -9,6 +9,7 @@ const ejsMate = require("ejs-mate");
 const wrapAsync = require("./utils/WrapAsync.js");
 const ExpressError = require("./utils/ExpressError.js");
 const ListingSchema = require("./joi.js");
+const Review = require("./models/review.js");
 
 app.listen(port);
 
@@ -30,12 +31,13 @@ app.use(methodOverride("_method"));
 app.use(express.json());
 app.engine('ejs', ejsMate);
 
-const validateSchema = (req,res)=>{
+const validateSchema = (req,res,next)=>{
     const { error } = ListingSchema.validate(req.body.listing);
     if (error) {
         const message = error.details.map(el => el.message).join(',');
         throw new ExpressError(400, message);
     }
+    next();
 }
 
 app.get("/create", async(req, res)=>{
@@ -54,7 +56,7 @@ app.get("/listings",wrapAsync( async (req,res)=>{
 
 app.get("/listings/:id", wrapAsync(async (req, res)=>{
     let {id} = req.params;
-    let list = await Listing.findById(`${id}`);
+    let list = await Listing.findById(`${id}`).populate("reviews");
     res.render("listings/list", {list});
 }));
 
@@ -85,6 +87,26 @@ app.delete("/listings/:id", wrapAsync(async (req, res)=>{
     console.log("Deleted successfully!");
     res.redirect("/listings");
 }));
+
+app.post("/listings/:id/reviews", wrapAsync(async (req,res) => {
+    let {id} = req.params;
+    let listing = await Listing.findById(id);
+    let {rating, comment} = req.body;
+    let newReview = new Review({rating, comment});
+    await newReview.save();
+    listing.reviews.push(newReview);
+    await listing.save();
+    console.log("Review Added!");
+    res.redirect(`/listings/${id}`);
+}));
+
+app.delete("/listings/:id/reviews/:reviewId", async (req,res) => {
+    let {id, reviewId} = req.params;
+    await Listing.findByIdAndUpdate(id, {$pull : {reviews:reviewId}});
+    await Review.findByIdAndDelete(reviewId);
+    console.log(`Deleted Review successfully!`);
+    res.redirect(`/listings/${id}`);
+});
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));

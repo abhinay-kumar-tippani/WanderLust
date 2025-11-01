@@ -1,33 +1,131 @@
 <% layout("/layouts/boilerplate") %>
 <style>
-    .listing-card {
-  /* border-radius: 16px; */
-  overflow: hidden;
-  transition: box-shadow 0.3s ease;
-}
-.listing-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  .listing-card {
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+  }
+  .listing-card:hover {
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  .show-img {
+    object-fit: cover;
+    border-radius: 16px;
+    height: 420px;
+  }
+
+  .card-title {
+    font-size: 28px;
+  }
+
+  .btn {
+    border-radius: 8px;
+    font-size: 16px;
+    transition: all 0.2s ease-in-out;
+  }
+  .btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .reviews {
+    margin: 4rem auto;
+    max-width: 800px;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .reviews form {
+    margin-bottom: 2rem;
+  }
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse; 
+  justify-content: flex-end;
 }
 
-.show-img {
-  object-fit: cover;
-  border-radius: 16px;
-  height: 420px;
+.star-rating input {
+  display: none;
 }
 
-.card-title {
-  font-size: 28px;
+.star-rating label {
+  font-size: 2rem;
+  color: #ccc;
+  cursor: pointer;
+  transition: color 0.2s ease;
 }
 
-.btn {
-  border-radius: 8px;
-  font-size: 16px;
-  transition: all 0.2s ease-in-out;
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  color: #ffc107;
 }
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+
+.star-rating input:checked ~ label {
+  color: #ffc107;
 }
+
+  .reviews textarea {
+    width: 100%;
+    height: 120px;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #ced4da;
+    resize: vertical;
+    font-size: 1rem;
+    font-family: inherit;
+    margin-bottom: 1rem;
+    transition: border-color 0.2s ease;
+  }
+
+  .reviews textarea:focus {
+    border-color: #0d6efd;
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+  }
+
+  .reviews button {
+    background-color: #0d6efd;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+  }
+
+  .reviews button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .reviews li {
+    list-style: none;
+    background-color: #ffffff;
+    padding: 1rem 1.25rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .reviews li button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    margin-left: 1rem;
+  }
+
+  .reviews li button:hover {
+    background-color: #c82333;
+  }
 </style>
 
 <body>
@@ -59,5 +157,27 @@
         </form>
       </div>
     </div>
+  </div>
+
+  <div class="reviews">
+    <form method="POST" action="/listings/<%= list._id %>/reviews">
+  <div class="star-rating">
+    <% for(let i = 5; i >= 1; i--) { %>
+      <input type="radio" id="star<%= i %>" name="rating" value="<%= i %>">
+      <label for="star<%= i %>">&#9733;</label>
+    <% } %>
+  </div>
+      <textarea name="comment" placeholder="Enter a review..." required></textarea>
+      <button type="submit">Submit Review</button>
+    </form>
+
+    <% for(let r of list.reviews) { %>
+      <form method="POST" action="/listings/<%= list._id %>/reviews/<%= r._id %>?_method=DELETE">
+        <li>
+          <span><%= r.comment %> — <strong><%= r.rating %>★</strong></span>
+          <button type="submit">Delete</button>
+        </li>
+      </form>
+    <% } %>
   </div>
 </body>
