@@ -11,9 +11,13 @@ const ExpressError = require("./utils/ExpressError.js");
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
 const flash = require('connect-flash');
+const User = require('./models/user.js');
+const LocalStratergy = require('passport-local');
+const passport = require('passport');
 
-const listings = require("./routes/listings.js");
-const reviews = require("./routes/reviews.js");
+const listingsRoute = require("./routes/listings.js");
+const reviewsRoute = require("./routes/reviews.js");
+const userRoute = require("./routes/user.js");
 
 app.listen(port);
 const MONGOOSE_URL = "mongodb://127.0.0.1:27017/wanderlust";
@@ -34,8 +38,6 @@ app.use(methodOverride("_method"));
 app.use(express.json());
 app.engine('ejs', ejsMate);
 
-app.use(flash());
-
 const sessionOptions = {
     secret:'secretcode', 
     resave:false, 
@@ -46,7 +48,15 @@ const sessionOptions = {
         httpOnly : true
     }
 }
+
+app.use(flash());
 app.use(session(sessionOptions));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStratergy(User.authenticate()));
+
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 app.use((req,res,next)=>{
     res.locals.successMsg = req.flash('success');
@@ -54,9 +64,20 @@ app.use((req,res,next)=>{
     next();
 });
 
-app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+app.use("/", userRoute);
+app.use("/listings", listingsRoute);
+app.use("/listings/:id/reviews", reviewsRoute);
 
+
+app.get('/fakeregister', async (req,res) => {
+    let fakeUser = new User({
+        email : 'fake@gmail.com',
+        username : 'faketinka'
+    });
+
+    let newUser = await User.register(fakeUser, "fake123");
+    res.send(newUser);
+});
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));
