@@ -61,6 +61,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req,res,next)=>{
     res.locals.successMsg = req.flash('success');
     res.locals.errorMsg = req.flash('error');
+    res.locals.userStatus = req.user;
     next();
 });
 
@@ -69,15 +70,15 @@ app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 
 
-app.get('/fakeregister', async (req,res) => {
-    let fakeUser = new User({
-        email : 'fake@gmail.com',
-        username : 'faketinka'
-    });
+// app.get('/fakeregister', async (req,res) => {
+//     let fakeUser = new User({
+//         email : 'fake@gmail.com',
+//         username : 'faketinka'
+//     });
 
-    let newUser = await User.register(fakeUser, "fake123");
-    res.send(newUser);
-});
+//     let newUser = await User.register(fakeUser, "fake123");
+//     res.send(newUser);
+// });
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));

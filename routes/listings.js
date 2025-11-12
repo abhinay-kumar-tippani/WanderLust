@@ -5,6 +5,7 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/WrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const ListingSchema = require("../joi.js");
+const {isLoggedIn} = require('../middleware.js');
 
 
 //Schema Validation
@@ -19,7 +20,7 @@ const validateSchema = (req,res,next)=>{
 
 
 //Create
-route.get("/create", async(req, res)=>{
+route.get("/create", isLoggedIn , async(req, res)=>{
     res.render("listings/create");
 });
 
@@ -43,7 +44,7 @@ route.get("/:id", wrapAsync(async (req, res)=>{
 
 
 //Edit Request
-route.get("/:id/edit", wrapAsync(async (req, res)=>{
+route.get("/:id/edit", isLoggedIn, wrapAsync(async (req, res)=>{
     let {id} = req.params;
     let list = await Listing.findById(`${id}`);
     res.render("listings/edit", {list});
@@ -70,7 +71,7 @@ route.post("/", validateSchema, wrapAsync( async (req, res)=>{
 
 
 //Delete
-route.delete("/:id", wrapAsync(async (req, res)=>{
+route.delete("/:id", isLoggedIn, wrapAsync(async (req, res)=>{
     let {id} = req.params;
     await Listing.findByIdAndDelete(`${id}`);
     console.log("Deleted successfully!");
