@@ -11,8 +11,12 @@ const reviewSchema = new mongoose.Schema({
         type : Number,
         min : 1,
         max : 5
+    },
+    author : {
+        type : mongoose.Types.ObjectId,
+        ref : "User"
     }
-    
+
 });
 
 const Review = mongoose.model("Review", reviewSchema);
