@@ -1,4 +1,5 @@
 const Listing = require("./models/listing.js");
+const Review = require("./models/review.js");
 const ExpressError = require("./utils/ExpressError.js");
 const ListingSchema = require("./joi.js");
 
@@ -34,6 +35,17 @@ module.exports.validateSchema = (req,res,next)=>{
     if (error) {
         const message = error.details.map(el => el.message).join(',');
         throw new ExpressError(400, message);
+    }
+    next();
+}
+
+module.exports.isAuthor = async(req,res,next)=>{
+    let {id, reviewId} = req.params;
+    let review = await Review.findById(reviewId);
+    let authorId = review.author;
+    if(!req.user || !authorId.equals(res.locals.userStatus._id)){
+        req.flash("error", "you dont have access to delete");
+        return res.redirect(`/listings/${id}`);
     }
     next();
 }
