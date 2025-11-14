@@ -1,3 +1,7 @@
+if(process.env.NODE_ENV != 'production'){
+    require('dotenv').config()
+}
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
@@ -70,15 +74,6 @@ app.use("/listings", listingsRoute);
 app.use("/listings/:id/reviews", reviewsRoute);
 
 
-// app.get('/fakeregister', async (req,res) => {
-//     let fakeUser = new User({
-//         email : 'fake@gmail.com',
-//         username : 'faketinka'
-//     });
-
-//     let newUser = await User.register(fakeUser, "fake123");
-//     res.send(newUser);
-// });
 
 app.use((req, res, next) => {
     next(new ExpressError(404, "Page Not Found!"));

@@ -5,11 +5,14 @@ const Listing = require("../models/listing.js");
 const wrapAsync = require("../utils/WrapAsync.js");
 const {isLoggedIn, isOwner, validateSchema} = require('../middleware.js');
 const ListingController = require('../controllers/listing.js');
-
+const multer  = require('multer');
+const {storage} = require('../cloundConfig.js');
+const upload = multer({ storage })
 
 router.route("/")
 .get(wrapAsync(ListingController.Home)) //Home router
-.post( validateSchema, wrapAsync(ListingController.createListing )); //Create
+.post( isLoggedIn, upload.single('listing[image]'), wrapAsync(ListingController.createListing )); //Create
+
 
 //Create
 router.get("/create", isLoggedIn, ListingController.createRequest);
